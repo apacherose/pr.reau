@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Report1 xmlns="https://registryagency.bg/schema/v1/Report1" xmlns:reau="reau.pr.bg">
+  <reau:Header>
+    <reau:ServiceInfo>
+      <reau:Code>0003</reau:Code>
+    </reau:ServiceInfo>
+    <reau:OfficeID>office sofia</reau:OfficeID>
+    <reau:Applicant>
+      <reau:CIN>zz700</reau:CIN>
+    </reau:Applicant>
+  </reau:Header>
+</Report1>

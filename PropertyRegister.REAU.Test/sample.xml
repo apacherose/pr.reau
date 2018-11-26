@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="reau.pr.bg">
+  <Header>
+    <ServiceInfo>
+      <Code>0001</Code>
+      <Obligation>100.50</Obligation>
+    </ServiceInfo>
+    <OfficeID>office sofia</OfficeID>
+    <Applicant>
+      <CIN>zz700</CIN>
+    </Applicant>
+  </Header>
+  <CertificateForPersonFromPropertyRegister>
+    <Type>
+      INDIVIDUAL
+    </Type>
+  </CertificateForPersonFromPropertyRegister>
+  <AttachedDocuments>
+    <AttachedDocument>
+      <BackOfficeGUID>47f1079e-319c-4b7e-8cb8-4ec6532f06ae</BackOfficeGUID>
+    </AttachedDocument>
+  </AttachedDocuments>
+</Application>

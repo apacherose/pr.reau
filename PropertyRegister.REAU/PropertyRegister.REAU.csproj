@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F8F55F6D-BD0F-4F27-A395-44CB46F140C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PropertyRegister.REAU</RootNamespace>
+    <AssemblyName>PropertyRegister.REAU</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Applications\ApplicationInfoResolver.cs" />
+    <Compile Include="Applications\ApplicationReceivedMessage.cs" />
+    <Compile Include="Applications\ApplicationService.cs" />
+    <Compile Include="Applications\Integration\Objects.cs" />
+    <Compile Include="Applications\Models\ServiceAction.cs" />
+    <Compile Include="Applications\Models\ServiceInstance.cs" />
+    <Compile Include="Applications\Models\Application.cs" />
+    <Compile Include="Applications\Models\ApplicationDocument.cs" />
+    <Compile Include="Applications\Models\ServicePayment.cs" />
+    <Compile Include="Applications\Models\ServiceInstanceAction.cs" />
+    <Compile Include="Applications\Models\ServiceDocument.cs" />
+    <Compile Include="Applications\Results\ApplicationAcceptedResult.cs" />
+    <Compile Include="Applications\Results\ApplicationProcessedResult.cs" />
+    <Compile Include="Applications\Results\PaymentProcessedResult.cs" />
+    <Compile Include="Common\DistributedOperationService.cs" />
+    <Compile Include="Common\DocumentService.cs" />
+    <Compile Include="Common\Models\DocumentData.cs" />
+    <Compile Include="Common\Models\ServiceOperation.cs" />
+    <Compile Include="Common\Persistence\CommonDataContext.cs" />
+    <Compile Include="Common\Persistence\ServiceOperationEntity.cs" />
+    <Compile Include="Domain\ApplicationServiceType.cs" />
+    <Compile Include="Domain\ApplicationServiceTypeCollection.cs" />
+    <Compile Include="Integration\PaymentIntegrationClient.cs" />
+    <Compile Include="Integration\PropertyRegisterClient.cs" />
+    <Compile Include="Applications\Persistence\ApplicationDocumentEntity.cs" />
+    <Compile Include="Applications\Persistence\ApplicationEntity.cs" />
+    <Compile Include="Applications\Persistence\ApplicationProcessDataContext.cs" />
+    <Compile Include="Payments\PaymentManager.cs" />
+    <Compile Include="Persistence\BaseDataContext.cs" />
+    <Compile Include="Persistence\CnsysDbContext.cs" />
+    <Compile Include="Persistence\DapperColumnAttribute.cs" />
+    <Compile Include="Persistence\DataContextHelper.cs" />
+    <Compile Include="Persistence\DbContextHelper.cs" />
+    <Compile Include="Persistence\EntityBase.cs" />
+    <Compile Include="Persistence\IDataSourceUser.cs" />
+    <Compile Include="Persistence\REAUDbContext.cs" />
+    <Compile Include="Applications\Persistence\ServiceActionEntity.cs" />
+    <Compile Include="Applications\Persistence\ServiceDocumentEntity.cs" />
+    <Compile Include="Applications\Persistence\ServiceInstanceEntity.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper">
+      <Version>1.50.5</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Oracle.ManagedDataAccess">
+      <Version>18.3.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
