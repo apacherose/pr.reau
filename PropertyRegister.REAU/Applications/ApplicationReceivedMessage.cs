@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace PropertyRegister.REAU.Applications
 {
     /// <summary>
-    /// Dummy
+    /// Dummy - тест за rebus!
     /// </summary>
     public class ApplicationReceivedMessage
     {
