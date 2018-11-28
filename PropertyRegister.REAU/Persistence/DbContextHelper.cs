@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace PropertyRegister.REAU.Persistence
     public static class DbContextHelper
     {
         public static void SPExecute(this IDbConnection connection, string procName, SqlMapper.IDynamicParameters parameters = null)
-        {            
+        {
             connection.Execute(procName, parameters, commandType: CommandType.StoredProcedure);
         }
 
@@ -29,15 +30,9 @@ namespace PropertyRegister.REAU.Persistence
             return new CnsysGridReader(reader);
         }
 
-        public static IDataReader SPExecuteReader(this DbConnection connection, string schema, string procName, SqlMapper.IDynamicParameters parameters = null, CommandBehavior behavior = CommandBehavior.Default)
-        {
-            if (!String.IsNullOrWhiteSpace(schema))
-            {
-                schema = String.Format("\"{0}\".", schema);
-            }
-            else schema = "";
-
-            CommandDefinition commandDefinition = new CommandDefinition(string.Format("{0}\"{1}\"", schema, procName), parameters, null, null, CommandType.StoredProcedure, CommandFlags.None);
+        public static IDataReader SPExecuteReader(this DbConnection connection, string procName, SqlMapper.IDynamicParameters parameters = null, CommandBehavior behavior = CommandBehavior.Default)
+        {           
+            CommandDefinition commandDefinition = new CommandDefinition(procName, parameters, null, null, CommandType.StoredProcedure, CommandFlags.None);
 
             var reader = connection.ExecuteReader(commandDefinition, behavior);
 
@@ -181,7 +176,7 @@ namespace PropertyRegister.REAU.Persistence
 
         public bool GetBoolean(string name) => Get<OracleDecimal>(name).ToByte() == 1;
 
-        public string GetString(string name) => 
+        public string GetString(string name) =>
             Get<OracleString>(name) != null ? Get<OracleString>(name).Value : null;
     }
 }

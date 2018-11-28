@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationTests.cs" />
+    <Compile Include="DocumentsTests.cs" />
     <Compile Include="Mocks\ActionDispatcherMock.cs" />
     <Compile Include="Mocks\ApplicationEntityMock.cs" />
     <Compile Include="Mocks\ApplicationServiceTypesCollection.cs" />

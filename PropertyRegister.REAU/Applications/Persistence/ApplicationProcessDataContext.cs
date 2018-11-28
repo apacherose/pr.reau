@@ -33,7 +33,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_RegistrationTime", OracleDbType.TimeStamp, registrationTime);
             parameters.Add("p_Application_Id_Out", OracleDbType.Int64, null, System.Data.ParameterDirection.Output);
 
-            _dbConnection.SPExecute("pkg_services.p_Applications_Create", parameters);
+            DbConnection.SPExecute("pkg_services.p_Applications_Create", parameters);
 
             applicationID = parameters.Get<OracleDecimal>("p_Application_Id_Out").ToInt64();
         }
@@ -52,7 +52,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_ApplicationType_Id", OracleDbType.Int16, applicationTypeID);
             parameters.Add("p_RegistrationTime", OracleDbType.TimeStamp, registrationTime);
 
-            _dbConnection.SPExecute("pkg_services.p_Applications_Update", parameters);
+            DbConnection.SPExecute("pkg_services.p_Applications_Update", parameters);
         }
 
         public CnsysGridReader ApplicationSearch(
@@ -70,7 +70,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_ResultsCount_out", OracleDbType.Int32, null, System.Data.ParameterDirection.Output);
             parameters.Add("cv_1", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var result = _dbConnection.SPExecuteReader("pkg_services.p_Applications_Search", parameters);
+            var result = DbConnection.SPExecuteReader("pkg_services.p_Applications_Search", parameters);
             count = parameters.Get<OracleDecimal>("p_ResultsCount_out").ToInt32();
 
             return result;
@@ -83,7 +83,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_Applicant_CIN", OracleDbType.Int32, applicantCIN);
             parameters.Add("p_ServiceInstance_Id_Out", OracleDbType.Int32, null, System.Data.ParameterDirection.Output);
 
-            _dbConnection.SPExecute("pkg_services.p_ServiceInstance_Create", parameters);
+            DbConnection.SPExecute("pkg_services.p_ServiceInstance_Create", parameters);
 
             serviceInstanceID = parameters.Get<OracleDecimal>("p_ServiceInstance_Id_Out").ToInt64();
         }
@@ -95,7 +95,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_Office_Id", OracleDbType.Int32, officeID);
             parameters.Add("p_Applicant_CIN", OracleDbType.Int32, applicantCIN);
 
-            _dbConnection.SPExecute("pkg_services.p_ServiceInstance_Update", parameters);
+            DbConnection.SPExecute("pkg_services.p_ServiceInstance_Update", parameters);
         }
 
         public CnsysGridReader ServiceInstanceSearch(string p_ServiceInstance_Ids, long? p_Office_Id, long? p_Applicant_CIN, int p_StartIndex, int p_PageSize, out int count)
@@ -110,7 +110,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_ResultsCount_out", OracleDbType.Int32, null, System.Data.ParameterDirection.Output);
             parameters.Add("cv_1", OracleDbType.RefCursor, ParameterDirection.Output);
 
-            var reader = _dbConnection.SPExecuteReader("PKG_VELIN.p_ServiceInstance_Search", parameters);
+            var reader = DbConnection.SPExecuteReader("PKG_VELIN.p_ServiceInstance_Search", parameters);
 
             count = parameters.Get<OracleDecimal>("p_ResultsCount_out").ToInt32();
 

@@ -281,7 +281,7 @@ namespace PropertyRegister.REAU.Applications
 
         private async Task SaveApplicationDocumentsAsync(long applicationID, ApplicationXmlInfo applInfo, Stream xml)
         {
-            var packageDocumentData = await DocumentService.SaveDocumentAsync(new DocumentRequest()
+            var packageDocumentData = await DocumentService.SaveDocumentAsync(new DocumentCreateRequest()
             {
                 ContentType = "application/xml",
                 Content = xml
@@ -291,7 +291,7 @@ namespace PropertyRegister.REAU.Applications
             {
                 ApplicationID = applicationID,
                 DocumentType = 1, // main package
-                DocumentID = packageDocumentData.DocID.Value
+                DocumentID = packageDocumentData.DocumentDataID
             };
 
             List<ApplicationDocument> applicationDocuments = new List<ApplicationDocument>();

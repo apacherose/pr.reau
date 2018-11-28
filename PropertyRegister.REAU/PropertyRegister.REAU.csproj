@@ -57,12 +57,15 @@
     <Compile Include="Applications\Results\ApplicationAcceptedResult.cs" />
     <Compile Include="Applications\Results\ApplicationProcessedResult.cs" />
     <Compile Include="Applications\Results\PaymentProcessedResult.cs" />
+    <Compile Include="Common\DeferredInitializedStream.cs" />
     <Compile Include="Common\DistributedOperationService.cs" />
     <Compile Include="Common\DocumentService.cs" />
     <Compile Include="Common\Models\DocumentData.cs" />
     <Compile Include="Common\Models\ServiceOperation.cs" />
     <Compile Include="Common\Persistence\CommonDataContext.cs" />
+    <Compile Include="Common\Persistence\DocumentDataEntity.cs" />
     <Compile Include="Common\Persistence\ServiceOperationEntity.cs" />
+    <Compile Include="Common\WrappedBinaryStream.cs" />
     <Compile Include="Domain\ApplicationServiceType.cs" />
     <Compile Include="Domain\ApplicationServiceTypeCollection.cs" />
     <Compile Include="Integration\PaymentIntegrationClient.cs" />

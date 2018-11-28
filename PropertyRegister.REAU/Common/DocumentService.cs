@@ -1,50 +1,93 @@
 ﻿using PropertyRegister.REAU.Common.Models;
+using PropertyRegister.REAU.Common.Persistence;
+using PropertyRegister.REAU.Persistence;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PropertyRegister.REAU.Common
 {
-    public class DocumentRequest
+    public class DocumentCreateRequest
     {
-        // + some file metadata ...
+        public string Filename { get; set; }
         public string ContentType { get; set; }
-
         public Stream Content { get; set; }
+    }
+
+    public class DocumentCreateResult
+    {
+        public long DocumentDataID { get; set; }
+        public string DocumentIdentifier { get; set; }
     }
 
     public interface IDocumentService
     {
-        Task<DocumentData> SaveDocumentAsync(DocumentRequest request);
+        Task<DocumentCreateResult> SaveDocumentAsync(DocumentCreateRequest request);
         Task DeleteDocumentAsync(string documentIdentifier);
-        Task<DocumentData> GetDocumentAsync(string documentIdentifier);
-        Task<List<DocumentData>> GetDocumentsAsync(List<string> documentIdentifiers);
+        Task<IEnumerable<DocumentData>> GetDocumentsAsync(List<string> documentIdentifiers, bool loadContent = false);
     }
 
     public class DocumentService : IDocumentService
     {
+        private readonly IDocumentDataEntity DocumentDataEntity;
 
-        public Task<DocumentData> SaveDocumentAsync(DocumentRequest request)
+        public DocumentService(IDocumentDataEntity documentDataEntity)
         {
-            return null;
+            DocumentDataEntity = documentDataEntity;
+        }
+
+        public Task<DocumentCreateResult> SaveDocumentAsync(DocumentCreateRequest request)
+        {
+            return DbContextHelper.TransactionalOperationAsync(() => SaveDocumentAsyncInternal(request));
         }
 
         public Task DeleteDocumentAsync(string documentIdentifier)
         {
-            return null;
+            if (!Guid.TryParse(documentIdentifier, out Guid guid))
+                throw new ArgumentException("documentIdentifier not valid GUID!");
+
+            DocumentDataEntity.Delete(guid);
+
+            return Task.CompletedTask;
         }
 
-        public Task<DocumentData> GetDocumentAsync(string documentIdentifier)
+        public Task<IEnumerable<DocumentData>> GetDocumentsAsync(List<string> documentIdentifiers, bool loadContent = false)
         {
-            throw new NotImplementedException();
+            var docs = DocumentDataEntity.Search(new DocumentDataSearchCriteria()
+            {
+                Identifiers = documentIdentifiers
+            });
+
+            if (loadContent)
+            {
+                foreach (var doc in docs)
+                {
+                    doc.Content = DocumentDataEntity.ReadContent(doc.Identifier);
+                }
+            }
+
+            return Task.FromResult(docs);
         }
 
-        public Task<List<DocumentData>> GetDocumentsAsync(List<string> documentIdentifiers)
+        private Task<DocumentCreateResult> SaveDocumentAsyncInternal(DocumentCreateRequest request)
         {
-            throw new NotImplementedException();
+            var documentData = new DocumentData()
+            {
+                Identifier = Guid.NewGuid().ToString(),
+                ContentType = request.ContentType,
+                Filename = request.Filename,
+                IsTemporal = true,
+                Content = request.Content
+            };
+
+            DocumentDataEntity.Create(documentData);
+
+            return Task.FromResult(new DocumentCreateResult()
+            {
+                DocumentDataID = documentData.DocID.Value,
+                DocumentIdentifier = documentData.Identifier.ToString()
+            });
         }
     }
 }
