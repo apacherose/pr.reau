@@ -12,6 +12,7 @@ using PropertyRegister.REAU.Persistence;
 using PropertyRegister.REAU.Test.Mocks;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -92,6 +93,19 @@ namespace PropertyRegister.REAU.Test
         {
             await ServiceProvider.GetRequiredService<IActionDispatcher>()
                 .SendAsync("ApplicationAcceptance", (long)100);
+        }
+
+        [TestMethod]
+        public void Test_ApplicationInfoResolver_AttachedDocuments()
+        {
+            var resolver = ServiceProvider.GetRequiredService<IApplicationInfoResolver>();
+            
+            using (var ms = File.OpenRead(@"C:\Users\vachev\Desktop\xsd-xml\xml\CertificateForPersonFromPropertyRegister-test.xml"))
+            {
+                var info = resolver.GetApplicationInfoFromXml(ms);
+
+                Assert.IsTrue(info.AttachedDocumentIDs != null && info.AttachedDocumentIDs.Any());
+            }                
         }
     }
 }

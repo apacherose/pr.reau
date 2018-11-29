@@ -53,13 +53,13 @@ namespace PropertyRegister.REAU.Test
 
                     entity.Create(document);
 
-                    Assert.IsTrue(document.DocID.HasValue && document.Identifier.HasValue);
+                    Assert.IsTrue(document.DocID.HasValue);
 
                     document.IsTemporal = false;
 
                     entity.Update(document);
 
-                    var documentFound = entity.Search(new DocumentDataSearchCriteria() { Identifiers = new List<System.Guid>() { document.Identifier.Value } }).SingleOrDefault();
+                    var documentFound = entity.Search(new DocumentDataSearchCriteria() { Identifiers = new List<string>() { document.Identifier } }).SingleOrDefault();
 
                     Assert.IsTrue(documentFound != null && documentFound.IsTemporal == false);
                 }

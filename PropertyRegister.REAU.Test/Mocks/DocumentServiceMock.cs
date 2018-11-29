@@ -25,9 +25,19 @@ namespace PropertyRegister.REAU.Test.Mocks
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<DocumentData>> GetDocumentsAsync(List<string> documentIdentifiers, bool loadContent = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<DocumentData> SaveDocumentAsync(DocumentCreateRequest request)
         {
             return Task.FromResult(new DocumentData() { DocID = 100 });
+        }
+
+        Task<DocumentCreateResult> IDocumentService.SaveDocumentAsync(DocumentCreateRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

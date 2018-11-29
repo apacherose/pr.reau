@@ -1,16 +1,15 @@
 ﻿using PropertyRegister.REAU.Domain;
+using PropertyRegister.REAU.Nomenclatures;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace PropertyRegister.REAU.Test.Mocks
+namespace PropertyRegister.REAU.Web.Api.Test
 {
-    public class ApplicationServiceTypesCollectionMock
+    public class NomenclaturesProviderDummy : INomenclaturesProvider
     {
-        public ICollection<ApplicationServiceType> GetItems()
+        public ICollection<ApplicationServiceType> GetApplicationServiceTypes()
         {
             return new List<ApplicationServiceType>
             {

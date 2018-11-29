@@ -1,6 +1,7 @@
 ﻿using PropertyRegister.REAU.Applications.Models;
 using PropertyRegister.REAU.Domain;
 using PropertyRegister.REAU.Integration;
+using PropertyRegister.REAU.Nomenclatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +18,19 @@ namespace PropertyRegister.REAU.Payments
     public class PaymentManager : IPaymentManager
     {
         private readonly IPaymentIntegrationClient PaymentIntegrationClient;
-        private readonly ICollection<ApplicationServiceType> ApplicationTypesCollection;
+        private readonly INomenclaturesProvider NomenclaturesProvider;
 
-        public PaymentManager(IPaymentIntegrationClient paymentIntegrationClient, IApplicationServiceTypeCollection applicationTypesCollection)
+        public PaymentManager(IPaymentIntegrationClient paymentIntegrationClient, INomenclaturesProvider nomenclaturesProvider)
         {
             PaymentIntegrationClient = paymentIntegrationClient;
-            ApplicationTypesCollection = applicationTypesCollection.GetItems();
+            NomenclaturesProvider = nomenclaturesProvider;
         }
 
         public async Task<ServicePayment> RequestApplicationPaymentAsync(Application application, decimal? filedAmount)
         {
             decimal? serviceFee, obligationAmount;
-            var serviceType = ApplicationTypesCollection.Single(t => t.ApplicationTypeID == application.ApplicationTypeID);
-
+            var serviceType = NomenclaturesProvider.GetApplicationServiceTypes().Single(t => t.ApplicationTypeID == application.ApplicationTypeID);
+            
             if (serviceType.IsFree)
             {
                 serviceFee = obligationAmount = 0m;

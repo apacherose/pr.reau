@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using PropertyRegister.REAU.Common;
-using PropertyRegister.REAU.Common.Persistence;
+using PropertyRegister.REAU.Applications;
+using PropertyRegister.REAU.Extensions;
+using PropertyRegister.REAU.Nomenclatures;
+using PropertyRegister.REAU.Web.Api.Test;
 
 namespace PropertyRegister.REAU.Web.Api
 {
@@ -23,15 +18,22 @@ namespace PropertyRegister.REAU.Web.Api
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IDocumentDataEntity, DocumentDataEntity>();
-            services.AddScoped<IDocumentService, DocumentService>();
+            services
+                .AddDocuments()
+                .AddApplicationsAcceptance()
+                .AddApplicationsPersistence()
+                .AddREAUInfrastructureServices();
+
+            // dummies ...
+            services.AddTransient<INomenclaturesProvider, NomenclaturesProviderDummy>();
+            services.AddTransient<IActionDispatcher, ActionDispatcherDummy>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

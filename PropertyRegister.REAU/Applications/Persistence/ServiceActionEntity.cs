@@ -18,7 +18,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
     public class ServiceActionEntity : EntityBase<ServiceAction, long?, ServiceActionSearchCriteria, ApplicationProcessDataContext>, IServiceActionEntity
     {
-        public ServiceActionEntity(bool isReadOnly) : base(isReadOnly)
+        public ServiceActionEntity() : base(false)
         {
         }
 

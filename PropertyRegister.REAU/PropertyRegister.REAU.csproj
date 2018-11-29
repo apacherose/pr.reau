@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Applications\ApplicationAcceptanceService.cs" />
     <Compile Include="Applications\ApplicationInfoResolver.cs" />
     <Compile Include="Applications\ApplicationReceivedMessage.cs" />
     <Compile Include="Applications\ApplicationService.cs" />
@@ -67,12 +68,13 @@
     <Compile Include="Common\Persistence\ServiceOperationEntity.cs" />
     <Compile Include="Common\WrappedBinaryStream.cs" />
     <Compile Include="Domain\ApplicationServiceType.cs" />
-    <Compile Include="Domain\ApplicationServiceTypeCollection.cs" />
+    <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Integration\PaymentIntegrationClient.cs" />
     <Compile Include="Integration\PropertyRegisterClient.cs" />
     <Compile Include="Applications\Persistence\ApplicationDocumentEntity.cs" />
     <Compile Include="Applications\Persistence\ApplicationEntity.cs" />
     <Compile Include="Applications\Persistence\ApplicationProcessDataContext.cs" />
+    <Compile Include="Nomenclatures\NomenclaturesProvider.cs" />
     <Compile Include="Payments\PaymentManager.cs" />
     <Compile Include="Persistence\BaseDataContext.cs" />
     <Compile Include="Persistence\CnsysDbContext.cs" />
@@ -90,6 +92,9 @@
   <ItemGroup>
     <PackageReference Include="Dapper">
       <Version>1.50.5</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

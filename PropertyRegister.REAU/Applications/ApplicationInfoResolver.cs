@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace PropertyRegister.REAU.Applications
@@ -23,25 +19,42 @@ namespace PropertyRegister.REAU.Applications
 
     public class ApplicationInfoResolver : IApplicationInfoResolver
     {
+        private const string _docNamespacePrefix = "__docns";
+
         public ApplicationXmlInfo GetApplicationInfoFromXml(Stream xml)
         {
             XmlDocument doc = new XmlDocument();
             doc.PreserveWhitespace = true;
             doc.Load(xml);
 
-            string docNamespace = doc.DocumentElement.NamespaceURI;
+            XmlNamespaceManager nsmgr = BuildDocumentNamespaceManager(doc.NameTable, doc.DocumentElement.NamespaceURI);
 
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-            nsmgr.AddNamespace("reau", "reau.pr.bg");
+            string mainAppNumber = doc.SelectSingleNode($"//{_docNamespacePrefix}:MainApplicationNumber", nsmgr)?.InnerText;
 
-            var mainAppNumberNodes = doc.DocumentElement.SelectNodes("//reau:MainApplicationNumber", nsmgr);
-            string mainAppNumber = mainAppNumberNodes.Count == 1 ? mainAppNumberNodes[0].InnerText : null;
+            var attDocsNodes = doc.SelectNodes("//att0:AttachedDocument/att1:DocumentUniqueId", nsmgr);
+
+            List<string> docIdentifiers = new List<string>();
+            foreach (XmlNode attDoc in attDocsNodes)
+            {
+                docIdentifiers.Add(attDoc.InnerText);
+            }
 
             return new ApplicationXmlInfo()
             {
-                XmlNamespace = docNamespace,
-                MainApplicationNumber = mainAppNumber
+                XmlNamespace = doc.DocumentElement.NamespaceURI,
+                MainApplicationNumber = mainAppNumber,
+                AttachedDocumentIDs = docIdentifiers
             };
-        }        
+        }
+
+        private XmlNamespaceManager BuildDocumentNamespaceManager(XmlNameTable xmlNameTable, string documentNamespace)
+        {
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlNameTable);
+            nsmgr.AddNamespace(_docNamespacePrefix, documentNamespace);
+            nsmgr.AddNamespace("att0", "AttachedDocuments");
+            nsmgr.AddNamespace("att1", "AttachedDocument");
+
+            return nsmgr;
+        }
     }
 }

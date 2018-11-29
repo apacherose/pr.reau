@@ -160,6 +160,8 @@ namespace PropertyRegister.REAU.Test
             Assert.IsTrue(operation.ServiceOperationID.HasValue);
         }
 
+
+
         private object Deserialize(XmlDocument doc, Type type)
         {
             var serializer = new XmlSerializer(type);

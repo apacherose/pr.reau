@@ -9,7 +9,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
     public class ServiceDocumentEntity : EntityBase<ServiceDocument, long?, object, ApplicationProcessDataContext>, IServiceDocumentEntity
     {
-        public ServiceDocumentEntity(bool isReadOnly) : base(isReadOnly)
+        public ServiceDocumentEntity() : base(false)
         {
         }
 
