@@ -10,7 +10,7 @@ namespace PropertyRegister.REAU.Common
 {
     public interface IIdempotentOperationExecutor
     {
-        Task<T> ExecuteAsync<T>(string operationID, ServiceOperationTypes operationType, Func<long, Task<T>> transactionalOperation);
+        Task<T> ExecuteAsync<T>(string operationID, ServiceOperationTypes operationType, Func<long, Task<T>> transactionalOperation, Action<T> nonTransactionOperationOnFirstCall = null);
     }
 
     public class IdempotentOperationExecutor : IIdempotentOperationExecutor
@@ -22,11 +22,14 @@ namespace PropertyRegister.REAU.Common
             ServiceOperationEntity = serviceOperationEntity;
         }
 
-        public Task<T> ExecuteAsync<T>(string operationID, ServiceOperationTypes operationType, Func<long, Task<T>> transactionalOperation)
+        public async Task<T> ExecuteAsync<T>(string operationID, ServiceOperationTypes operationType, 
+                Func<long, Task<T>> transactionalOperation, Action<T> nonTransactionOperationOnFirstCall = null)
         {
             try
             {
-                return DbContextHelper.TransactionalOperationAsync(async () =>
+                bool firstOperationCall = false;
+
+                var transactResult = await DbContextHelper.TransactionalOperationAsync(async () =>
                 {
                     var operation = new ServiceOperation()
                     {
@@ -51,9 +54,15 @@ namespace PropertyRegister.REAU.Common
                         operation.IsCompleted = true;
                         ServiceOperationEntity.Update(operation);
 
+                        firstOperationCall = true;
                         return res;
                     }
-                });                
+                });
+
+                if (firstOperationCall)
+                    nonTransactionOperationOnFirstCall?.Invoke(transactResult);
+
+                return transactResult;
             }
             catch (Exception ex)
             {

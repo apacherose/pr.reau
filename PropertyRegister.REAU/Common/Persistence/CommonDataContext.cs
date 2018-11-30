@@ -27,7 +27,7 @@ namespace PropertyRegister.REAU.Common.Persistence
             parameters.Add("p_OperationTypeID", OracleDbType.Int32, serviceOperationTypeID);
             parameters.Add("p_ServiceOperationID_out", OracleDbType.Int32, null, System.Data.ParameterDirection.Output);
             parameters.Add("p_IsCompleted_out", OracleDbType.Int32, null, System.Data.ParameterDirection.Output);
-            parameters.Add("p_Result_out", OracleDbType.NVarchar2, null, System.Data.ParameterDirection.Output);
+            parameters.Add("p_Result_out", OracleDbType.Varchar2, null, System.Data.ParameterDirection.Output, 2000);
 
             DbConnection.SPExecute("pkg_velin.p_Service_Operation_Create", parameters);
 
@@ -42,7 +42,7 @@ namespace PropertyRegister.REAU.Common.Persistence
             parameters.Add("p_ServiceOperationID", OracleDbType.Int64, serviceOperationID);
             parameters.Add("p_OperationID", OracleDbType.Varchar2, operationID);
             parameters.Add("p_IsCompleted", OracleDbType.Int32, isCompleted);
-            parameters.Add("p_Result", OracleDbType.NVarchar2, result);
+            parameters.Add("p_Result", OracleDbType.Varchar2, result);
 
             DbConnection.SPExecute("pkg_velin.p_Service_Operation_Update", parameters);
         }

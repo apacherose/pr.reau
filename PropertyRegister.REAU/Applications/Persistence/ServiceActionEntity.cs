@@ -24,7 +24,8 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
         protected override void CreateInternal(ApplicationProcessDataContext context, ServiceAction item)
         {
-            base.CreateInternal(context, item);
+            context.ServiceActionCreate(item.OperationID, item.ServiceInstanceID, item.ApplicationID, (int)item.ApplicationStatus, (int)item.ActionTypeID.Value, out long serviceActionID);
+            item.ServiceActionID = serviceActionID;
         }
 
         protected override IEnumerable<ServiceAction> SearchInternal(ApplicationProcessDataContext context, ServiceActionSearchCriteria searchCriteria)

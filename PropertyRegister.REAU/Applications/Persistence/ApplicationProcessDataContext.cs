@@ -76,6 +76,8 @@ namespace PropertyRegister.REAU.Applications.Persistence
             return result;
         }
 
+        #region Service Instance
+
         public void ServiceInstanceCreate(int officeID, int applicantCIN, out long serviceInstanceID)
         {
             var parameters = new OracleDynamicParameters();
@@ -116,5 +118,26 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
             return reader;
         }
+
+        #endregion
+
+        #region Service Actions
+
+        public void ServiceActionCreate(long operationID, long serviceInstanceID, long applicationID, int applicationStatus, int actionTypeID, out long serviceActionID)
+        {
+            var parameters = new OracleDynamicParameters();
+            parameters.Add("p_OperationID", OracleDbType.Int64, operationID);
+            parameters.Add("p_ServiceInstID", OracleDbType.Int64, serviceInstanceID);
+            parameters.Add("p_ApplicationID", OracleDbType.Int64, applicationID);
+            parameters.Add("p_ApplicationStatus", OracleDbType.Int32, applicationStatus);
+            parameters.Add("p_ActionTypeID", OracleDbType.Int32, actionTypeID);
+            parameters.Add("p_ServiceActionID_out", OracleDbType.Int64, null, System.Data.ParameterDirection.Output);
+
+            DbConnection.SPExecute("pkg_velin.p_Service_Action_Create", parameters);
+
+            serviceActionID = parameters.Get<OracleDecimal>("p_ServiceActionID_out").ToInt64();
+        }
+
+        #endregion
     }
 }

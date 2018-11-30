@@ -127,11 +127,12 @@ namespace PropertyRegister.REAU.Persistence
         private readonly DynamicParameters dynamicParameters = new DynamicParameters();
         private readonly List<OracleParameter> oracleParameters = new List<OracleParameter>();
 
-        public void Add(string name, OracleDbType oracleDbType, object value = null, ParameterDirection? direction = null)
+        public void Add(string name, OracleDbType oracleDbType, object value = null, ParameterDirection? direction = null, int? size = null)
         {
             ParameterDirection p_direction = direction ?? ParameterDirection.Input;
 
-            var oracleParameter = new OracleParameter(name, oracleDbType, value, p_direction);
+            var oracleParameter = size.HasValue ? new OracleParameter(name, oracleDbType, size.Value, value, p_direction) :
+                new OracleParameter(name, oracleDbType, value, p_direction);
 
             oracleParameters.Add(oracleParameter);
         }

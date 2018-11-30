@@ -2,9 +2,7 @@
 using PropertyRegister.REAU.Applications.Persistence;
 using PropertyRegister.REAU.Applications.Results;
 using PropertyRegister.REAU.Common;
-using PropertyRegister.REAU.Integration;
 using PropertyRegister.REAU.Nomenclatures;
-using PropertyRegister.REAU.Payments;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,32 +55,35 @@ namespace PropertyRegister.REAU.Applications
 
         public async Task<ApplicationAcceptedResult> AcceptApplicationAsync(string portalOperationID, Stream xml)
         {
-            var operationResult = await IdempotentOperationExecutor.ExecuteAsync(portalOperationID, Common.Models.ServiceOperationTypes.AcceptServiceApplication, async (oid) =>
-            {
-                var application = await InitialSaveApplication(xml);
-
-                var action = new ServiceAction()
+            var operationResult = await IdempotentOperationExecutor.ExecuteAsync(portalOperationID, Common.Models.ServiceOperationTypes.AcceptServiceApplication,
+                async (oid) =>
                 {
-                    OperationID = oid,
-                    ServiceInstanceID = application.ServiceInstanceID,
-                    ApplicationID = application.ApplicationID.Value,
-                    ApplicationStatus = application.Status.Value,
-                    ActionTypeID = ServicеActionTypes.ApplicationAcceptance
-                };
-                ServiceActionEntity.Create(action);
+                    var application = await InitialSaveApplication(xml);
 
-                var result = new Results.ApplicationAcceptedResult()
+                    var action = new ServiceAction()
+                    {
+                        OperationID = oid,
+                        ServiceInstanceID = application.ServiceInstanceID,
+                        ApplicationID = application.ApplicationID.Value,
+                        ApplicationStatus = application.Status.Value,
+                        ActionTypeID = ServicеActionTypes.ApplicationAcceptance
+                    };
+                    ServiceActionEntity.Create(action);
+
+                    var result = new Results.ApplicationAcceptedResult()
+                    {
+                        ApplicationID = application.ApplicationID.Value,
+                        ApplicationNumber = application.ApplicationIdentifier,
+                        ApplicationStatus = application.Status,
+                        RegistrationTime = application.RegistrationTime
+                    };
+
+                    return result;
+                },
+                async (r) =>
                 {
-                    ApplicationID = application.ApplicationID.Value,
-                    ApplicationNumber = application.ApplicationIdentifier,
-                    ApplicationStatus = application.Status,
-                    RegistrationTime = application.RegistrationTime
-                };
-
-                return result;
-            });
-
-            await ActionDispatcher.SendAsync("ApplicationAcceptance", operationResult.ApplicationID);
+                    await ActionDispatcher.SendAsync("ApplicationAcceptance", r.ApplicationID);
+                });
 
             return operationResult;
         }
@@ -125,6 +126,7 @@ namespace PropertyRegister.REAU.Applications
                 ServiceInstanceID = serviceInstanceID.Value,
                 ApplicationTypeID = serviceType.ApplicationTypeID,
                 MainApplicationID = mainApplicationID,
+                RegistrationTime = DateTime.UtcNow,
                 //OfficeID = 0, // from xml
                 Status = ApplicationStatuses.Accepted,
                 //ApplicantID = 0, // from authentication
@@ -141,6 +143,7 @@ namespace PropertyRegister.REAU.Applications
         {
             var packageDocumentData = await DocumentService.SaveDocumentAsync(new DocumentCreateRequest()
             {
+                Filename = "ApplicationXml",
                 ContentType = "application/xml",
                 Content = xml
             });
