@@ -26,10 +26,17 @@ namespace PropertyRegister.REAU.Web.Api
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
+                .Enrich.With<UserIdentityEnricher>()
                 .WriteTo.File(
                     path: @"C:\tmp\EPZEU\PR.REAU.Web.Api\log.txt", 
-                    outputTemplate: "---------------------------------------------------------------------- {NewLine} {Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+                    outputTemplate: "---------------------------------------------------------------------- {NewLine} {Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{UserIdentity}] [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Hour)
                 .CreateLogger();
+    }
+
+    public class UserIdentityEnricher : ILogEventEnricher
+    {
+        public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+             => logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserIdentity", @"cnsys\vachev")); 
     }
 }

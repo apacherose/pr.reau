@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PropertyRegister.REAU.Applications;
 using System;
 using System.Threading.Tasks;
@@ -17,8 +18,12 @@ namespace PropertyRegister.REAU.Web.Api.Controllers
 
         [HttpGet]
         //[RequiredOperationHeader]
-        public IActionResult Get()
+        public IActionResult Get([FromServices] ILogger<int> logger)
         {
+            int id = 55;
+            logger.LogError("test", id);
+            logger.LogCritical("some critical event with id: {id}", id);
+
             return Ok(new { id = 5, oid = RequestOperationID });
         }
 

@@ -7,6 +7,7 @@ using PropertyRegister.REAU.Applications;
 using PropertyRegister.REAU.Extensions;
 using PropertyRegister.REAU.Nomenclatures;
 using PropertyRegister.REAU.Web.Api.Test;
+using Serilog;
 
 namespace PropertyRegister.REAU.Web.Api
 {
@@ -30,6 +31,11 @@ namespace PropertyRegister.REAU.Web.Api
             // dummies ...
             services.AddTransient<INomenclaturesProvider, NomenclaturesProviderDummy>();
             services.AddTransient<IActionDispatcher, ActionDispatcherDummy>();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSerilog(dispose: true);
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
