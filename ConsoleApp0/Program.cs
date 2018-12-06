@@ -16,11 +16,13 @@ namespace ConsoleApp0
 
         static async Task MainAsync()
         {
+            string connString = "Data Source=pr_reau; User ID=pr_reau_dev; Password=pr_reau_dev;";
+
             using (var activator = new BuiltinHandlerActivator())
             {
                 Configure.With(activator)
-                    .Transport(t => t.UseMsmq("publisher"))
-                    //.Subscriptions(s => s.StoreInMemory())
+                    //.Transport(t => t.UseMsmqAsOneWayClient())
+                    .Transport(t => t.UseOracleAsOneWayClient(connString, "mbus_messages"))
                     .Routing(r => r.TypeBased().Map<ApplicationReceivedMessage>("consumer.input"))
                     .Start();                
 
@@ -35,7 +37,6 @@ namespace ConsoleApp0
                         goto consideredHarmful;
                     else
                     {
-                        //bus.Publish(new ApplicationReceivedMessage(keyChar));
                         bus.Send(new ApplicationReceivedMessage(keyChar));
                     }
                 }

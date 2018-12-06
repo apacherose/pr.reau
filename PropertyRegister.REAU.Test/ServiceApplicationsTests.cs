@@ -36,7 +36,6 @@ namespace PropertyRegister.REAU.Test
 
             services.AddTransient<IServiceActionRepository, ServiceInstanceActionEntityMock>();
             services.AddTransient<IDocumentService, DocumentServiceMock>();
-            services.AddTransient<IApplicationServiceTypeCollection, ApplicationServiceTypesCollectionMock>();
             services.AddTransient<IPropertyRegisterClient, PropertyRegisterClientMock>();
             services.AddTransient<IPaymentIntegrationClient, PaymentIntegrationClientMock>();
             services.AddTransient<IIdempotentOperationExecutor, IdempotentOperationExecutor>();
@@ -58,7 +57,6 @@ namespace PropertyRegister.REAU.Test
         [TestCleanup]
         public void CleanUp()
         {
-            ServiceProvider.GetRequiredService<IActionDispatcher>().Dispose();
         }
 
         [TestMethod]
@@ -72,7 +70,7 @@ namespace PropertyRegister.REAU.Test
             doc.PreserveWhitespace = true;
             doc.Load(filename);
 
-            var applicationService = ServiceProvider.GetRequiredService<ApplicationService>();
+            var applicationService = ServiceProvider.GetRequiredService<IApplicationAcceptanceService>();
 
             using (var ms = new MemoryStream())
             {
@@ -92,7 +90,7 @@ namespace PropertyRegister.REAU.Test
         public async Task Test_MessageBus()
         {
             await ServiceProvider.GetRequiredService<IActionDispatcher>()
-                .SendAsync("ApplicationAcceptance", (long)100);
+                .SendAsync((long)100);
         }
 
         [TestMethod]

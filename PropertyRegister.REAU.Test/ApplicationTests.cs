@@ -29,7 +29,6 @@ namespace PropertyRegister.REAU.Test
             services.AddTransient<ApplicationService>();
             services.AddTransient<IApplicationRepository, ApplicationEntityMock>();
             services.AddTransient<IDocumentService, DocumentServiceMock>();
-            services.AddTransient<IApplicationServiceTypeCollection, ApplicationServiceTypesCollectionMock>();
             services.AddTransient<IPropertyRegisterClient, PropertyRegisterClientMock>();
             services.AddTransient<IPaymentIntegrationClient, PaymentIntegrationClientMock>();
             services.AddSingleton<DbDataSets>();

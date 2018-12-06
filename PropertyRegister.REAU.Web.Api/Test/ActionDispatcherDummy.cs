@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PropertyRegister.REAU.Applications;
+using Rebus.Bus;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,32 +11,13 @@ namespace PropertyRegister.REAU.Web.Api.Test
 {
     public class ActionDispatcherDummy : IActionDispatcher
     {
-        private readonly JsonSerializer Serializer;
+        private readonly IBus Bus;
 
-        public ActionDispatcherDummy()
+        public ActionDispatcherDummy(IBus bus)
         {
-            Serializer = new JsonSerializer();
+            Bus = bus;
         }
 
-        public Task SendAsync(string actionName, object actionData)
-        {
-            JsonSerializer serializer = new JsonSerializer();
-
-            string path = @"c:\tmp\reau_dispacher_queue\" + $"{DateTime.Now.ToString("yyyyMMddhhmmss")}.txt";
-
-            using (StreamWriter sw = new StreamWriter(path))
-            {
-                using (JsonWriter writer = new JsonTextWriter(sw))
-                {
-                    Serializer.Serialize(writer, actionData);
-                }
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-        }
+        public Task SendAsync(object actionData) => Bus.Send(actionData);
     }
 }

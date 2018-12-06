@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp0", "ConsoleApp0\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PropertyRegister.REAU.Web.Api", "PropertyRegister.REAU.Web.Api\PropertyRegister.REAU.Web.Api.csproj", "{BD0EBC26-3B7E-4825-8F90-21A08059122C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyRegister.REAU.MessageProcessor", "PropertyRegister.REAU.MessageProcessor\PropertyRegister.REAU.MessageProcessor.csproj", "{FAFA1766-9255-452C-B713-DFC7AF45A59D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{BD0EBC26-3B7E-4825-8F90-21A08059122C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD0EBC26-3B7E-4825-8F90-21A08059122C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD0EBC26-3B7E-4825-8F90-21A08059122C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAFA1766-9255-452C-B713-DFC7AF45A59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAFA1766-9255-452C-B713-DFC7AF45A59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAFA1766-9255-452C-B713-DFC7AF45A59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAFA1766-9255-452C-B713-DFC7AF45A59D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

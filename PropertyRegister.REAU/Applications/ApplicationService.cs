@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace PropertyRegister.REAU.Applications
 {
-    public interface IActionDispatcher : IDisposable
+    public interface IActionDispatcher
     {
-        Task SendAsync(string actionName, object actionData);
+        Task SendAsync(object actionData);
     }
 
     public class ApplicationService
@@ -74,7 +74,7 @@ namespace PropertyRegister.REAU.Applications
                 if (operationResult.ApplicationStatus == ApplicationStatuses.WaitingRegistration ||
                      operationResult.ApplicationStatus == ApplicationStatuses.InProgress)
                 {
-                    await ActionDispatcher.SendAsync("ApplicationWaitingRegistration", operationResult.ApplicationID);
+                    await ActionDispatcher.SendAsync(operationResult);
                 }
             });
             
@@ -114,7 +114,7 @@ namespace PropertyRegister.REAU.Applications
                 });
             });
 
-            await ActionDispatcher.SendAsync("ApplicationWaitingRegistration", operationResult.ApplicationID);
+            await ActionDispatcher.SendAsync(operationResult);
         }
         
         //////

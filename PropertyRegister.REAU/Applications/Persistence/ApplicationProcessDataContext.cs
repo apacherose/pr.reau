@@ -90,7 +90,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
             DbConnection.SPExecute("pkg_services.p_ServiceInstance_Create", parameters);
 
-            serviceInstanceID = parameters.Get<OracleDecimal>("p_ServiceInstance_Id_Out").ToInt64();
+            serviceInstanceID = parameters.GetLongNumber("p_ServiceInstance_Id_Out");
         }
 
         public void ServiceInstanceUpdate(long serviceInstanceID, int officeID, int applicantCIN)
@@ -117,7 +117,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
             var reader = DbConnection.SPExecuteReader("PKG_VELIN.p_ServiceInstance_Search", parameters);
 
-            count = parameters.Get<OracleDecimal>("p_ResultsCount_out").ToInt32();
+            count = parameters.GetIntNumber("p_ResultsCount_out");
 
             return reader;
         }
@@ -138,7 +138,24 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
             DbConnection.SPExecute("pkg_velin.p_Service_Action_Create", parameters);
 
-            serviceActionID = parameters.Get<OracleDecimal>("p_ServiceActionID_out").ToInt64();
+            serviceActionID = parameters.GetLongNumber("p_ServiceActionID_out");
+        }
+
+        #endregion
+
+        #region Application Documents 
+
+        public void ApplicationDocumentCreate(long applicationID, int documentTypeID, long documentID, out long appDocumentID)
+        {
+            var parameters = new OracleDynamicParameters();
+            parameters.Add("p_Application_Id", OracleDbType.Int64, applicationID);
+            parameters.Add("p_Document_Type", OracleDbType.Int32, documentTypeID);
+            parameters.Add("p_Document_Id", OracleDbType.Int64, documentID);
+            parameters.Add("p_App_Document_Id_Out", OracleDbType.Int64, null, System.Data.ParameterDirection.Output);
+
+            DbConnection.SPExecute("pkg_services.p_App_Documents_Create", parameters);
+
+            appDocumentID = parameters.GetLongNumber("p_App_Document_Id_Out");
         }
 
         #endregion

@@ -15,7 +15,9 @@ namespace PropertyRegister.REAU.Applications.Persistence
 
         protected override void CreateInternal(ApplicationProcessDataContext context, ApplicationDocument item)
         {
-            //base.CreateInternal(context, item);
+            context.ApplicationDocumentCreate(item.ApplicationID, item.DocumentType.Value, item.DocumentID, out long appDocumentID);
+
+            item.ApplicationDocumentID = appDocumentID;
         }
 
         protected override void DeleteInternal(ApplicationProcessDataContext context, ApplicationDocument item)

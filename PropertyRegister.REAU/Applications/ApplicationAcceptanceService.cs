@@ -82,7 +82,7 @@ namespace PropertyRegister.REAU.Applications
                 },
                 async (r) =>
                 {
-                    await ActionDispatcher.SendAsync("ApplicationAcceptance", r.ApplicationID);
+                    await ActionDispatcher.SendAsync(r);
                 });
 
             return operationResult;

@@ -27,7 +27,7 @@ namespace PropertyRegister.REAU.Test.Mocks
                     .Start();
         }
 
-        public Task SendAsync(string actionName, object actionData)
+        public Task SendAsync(object actionData)
         {
             //TODO check if {actionname} exists in routing mapping?
             
@@ -49,7 +49,7 @@ namespace PropertyRegister.REAU.Test.Mocks
             Serializer = new JsonSerializer();
         }
 
-        public Task SendAsync(string actionName, object actionData)
+        public Task SendAsync(object actionData)
         {
             JsonSerializer serializer = new JsonSerializer();
 

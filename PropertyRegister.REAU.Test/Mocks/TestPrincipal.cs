@@ -1,4 +1,5 @@
-﻿using PropertyRegister.REAU.Persistence;
+﻿using CNSys.Security;
+using PropertyRegister.REAU.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace PropertyRegister.REAU.Test.Mocks
         public IIdentity Identity => throw new NotImplementedException();
 
         public string ClientID { get; }
+
+        public string ProxyUserID => throw new NotImplementedException();
 
         public bool IsInRole(string role)
         {
