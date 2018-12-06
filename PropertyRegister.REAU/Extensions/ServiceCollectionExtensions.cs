@@ -12,10 +12,10 @@ namespace PropertyRegister.REAU.Extensions
         public static IServiceCollection AddApplicationsPersistence(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddTransient<IApplicationEntity, ApplicationEntity>()
-                .AddTransient<IServiceInstanceEntity, ServiceInstanceEntity>()
-                .AddTransient<IApplicationDocumentEntity, ApplicationDocumentEntity>()
-                .AddTransient<IServiceActionEntity, ServiceActionEntity>();
+                .AddTransient<IApplicationRepository, ApplicationRepository>()
+                .AddTransient<IServiceInstanceRepository, ServiceInstanceRepository>()
+                .AddTransient<IApplicationDocumentRepository, ApplicationDocumentRepository>()
+                .AddTransient<IServiceActionRepository, ServiceActionRepository>();
         }
 
         public static IServiceCollection AddApplicationsAcceptance(this IServiceCollection serviceCollection)
@@ -29,7 +29,7 @@ namespace PropertyRegister.REAU.Extensions
         public static IServiceCollection AddDocuments(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-                .AddTransient<IDocumentDataEntity, DocumentDataEntity>()
+                .AddTransient<IDocumentDataRepository, DocumentDataRepository>()
                 .AddTransient<IDocumentService, DocumentService>();
         }
 
@@ -37,7 +37,7 @@ namespace PropertyRegister.REAU.Extensions
         {
             return serviceCollection
                 .AddTransient<IIdempotentOperationExecutor, IdempotentOperationExecutor>()
-                .AddTransient<IServiceOperationEntity, ServiceOperationEntity>();
+                .AddTransient<IServiceOperationRepository, ServiceOperationRepository>();
         }
     }
 }

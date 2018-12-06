@@ -64,32 +64,32 @@
     <Compile Include="Common\Models\DocumentData.cs" />
     <Compile Include="Common\Models\ServiceOperation.cs" />
     <Compile Include="Common\Persistence\CommonDataContext.cs" />
-    <Compile Include="Common\Persistence\DocumentDataEntity.cs" />
-    <Compile Include="Common\Persistence\ServiceOperationEntity.cs" />
+    <Compile Include="Common\Persistence\DocumentDataRepository.cs" />
+    <Compile Include="Common\Persistence\ServiceOperationRepository.cs" />
     <Compile Include="Common\WrappedBinaryStream.cs" />
     <Compile Include="Domain\ApplicationServiceType.cs" />
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Integration\PaymentIntegrationClient.cs" />
     <Compile Include="Integration\PropertyRegisterClient.cs" />
-    <Compile Include="Applications\Persistence\ApplicationDocumentEntity.cs" />
-    <Compile Include="Applications\Persistence\ApplicationEntity.cs" />
+    <Compile Include="Applications\Persistence\ApplicationDocumentRepository.cs" />
+    <Compile Include="Applications\Persistence\ApplicationRepository.cs" />
     <Compile Include="Applications\Persistence\ApplicationProcessDataContext.cs" />
     <Compile Include="Nomenclatures\NomenclaturesProvider.cs" />
     <Compile Include="Payments\PaymentManager.cs" />
     <Compile Include="Persistence\BaseDataContext.cs" />
-    <Compile Include="Persistence\CnsysDbContext.cs" />
     <Compile Include="Persistence\DapperColumnAttribute.cs" />
     <Compile Include="Persistence\DataContextHelper.cs" />
     <Compile Include="Persistence\DbContextHelper.cs" />
-    <Compile Include="Persistence\EntityBase.cs" />
-    <Compile Include="Persistence\IDataSourceUser.cs" />
     <Compile Include="Persistence\REAUDbContext.cs" />
-    <Compile Include="Applications\Persistence\ServiceActionEntity.cs" />
-    <Compile Include="Applications\Persistence\ServiceDocumentEntity.cs" />
-    <Compile Include="Applications\Persistence\ServiceInstanceEntity.cs" />
+    <Compile Include="Applications\Persistence\ServiceActionRepository.cs" />
+    <Compile Include="Applications\Persistence\ServiceDocumentRepository.cs" />
+    <Compile Include="Applications\Persistence\ServiceInstanceRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CNSys">
+      <Version>3.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Dapper">
       <Version>1.50.5</Version>
     </PackageReference>

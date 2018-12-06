@@ -1,4 +1,6 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using CNSys.Data;
+using CNSys.Security;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Configuration;
 using System.Threading;

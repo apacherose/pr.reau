@@ -1,12 +1,9 @@
-﻿using System;
-using PropertyRegister.REAU.Applications;
+﻿using PropertyRegister.REAU.Applications;
 using Rebus.Activation;
 using Rebus.Config;
-using Rebus.Handlers;
 using Rebus.Routing.TypeBased;
+using System;
 using System.Threading.Tasks;
-using Rebus.Persistence.InMem;
-using Rebus.Persistence.FileSystem;
 
 namespace ConsoleApp0
 {

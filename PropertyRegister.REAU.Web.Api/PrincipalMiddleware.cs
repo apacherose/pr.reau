@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CNSys.Security;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using PropertyRegister.REAU.Persistence;
 
 namespace PropertyRegister.REAU.Web.Api
 {
@@ -45,6 +43,8 @@ namespace PropertyRegister.REAU.Web.Api
         public TestPrincipal(IPrincipal principal, string clientID) : base(principal)
             => ClientID = clientID;        
 
-        public string ClientID { get; }        
+        public string ClientID { get; }
+
+        public string ProxyUserID => throw new NotImplementedException();
     }
 }

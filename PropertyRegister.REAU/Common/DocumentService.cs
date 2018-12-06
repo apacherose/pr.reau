@@ -30,11 +30,11 @@ namespace PropertyRegister.REAU.Common
 
     public class DocumentService : IDocumentService
     {
-        private readonly IDocumentDataEntity DocumentDataEntity;
+        private readonly IDocumentDataRepository DocumentDataRepository;
 
-        public DocumentService(IDocumentDataEntity documentDataEntity)
+        public DocumentService(IDocumentDataRepository documentDataRepository)
         {
-            DocumentDataEntity = documentDataEntity;
+            DocumentDataRepository = documentDataRepository;
         }
 
         public Task<DocumentCreateResult> SaveDocumentAsync(DocumentCreateRequest request)
@@ -47,14 +47,14 @@ namespace PropertyRegister.REAU.Common
             if (!Guid.TryParse(documentIdentifier, out Guid guid))
                 throw new ArgumentException("documentIdentifier not valid GUID!");
 
-            DocumentDataEntity.Delete(guid);
+            DocumentDataRepository.Delete(guid);
 
             return Task.CompletedTask;
         }
 
         public Task<IEnumerable<DocumentData>> GetDocumentsAsync(List<string> documentIdentifiers, bool loadContent = false)
         {
-            var docs = DocumentDataEntity.Search(new DocumentDataSearchCriteria()
+            var docs = DocumentDataRepository.Search(new DocumentDataSearchCriteria()
             {
                 Identifiers = documentIdentifiers
             });
@@ -63,7 +63,7 @@ namespace PropertyRegister.REAU.Common
             {
                 foreach (var doc in docs)
                 {
-                    doc.Content = DocumentDataEntity.ReadContent(doc.Identifier);
+                    doc.Content = DocumentDataRepository.ReadContent(doc.Identifier);
                 }
             }
 
@@ -81,7 +81,7 @@ namespace PropertyRegister.REAU.Common
                 Content = request.Content
             };
 
-            DocumentDataEntity.Create(documentData);
+            DocumentDataRepository.Create(documentData);
 
             return Task.FromResult(new DocumentCreateResult()
             {

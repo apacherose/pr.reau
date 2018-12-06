@@ -20,9 +20,9 @@ namespace PropertyRegister.REAU.Web.Api.Controllers
         //[RequiredOperationHeader]
         public IActionResult Get([FromServices] ILogger<int> logger)
         {
-            int id = 55;
-            logger.LogError("test", id);
-            logger.LogCritical("some critical event with id: {id}", id);
+            //int id = 55;
+            //logger.LogError("test", id);
+            //logger.LogCritical("some critical event with id: {id}", id);
 
             return Ok(new { id = 5, oid = RequestOperationID });
         }

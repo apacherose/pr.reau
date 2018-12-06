@@ -2,7 +2,6 @@
 using Rebus.Activation;
 using Rebus.Config;
 using Rebus.Handlers;
-using Rebus.Persistence.InMem;
 using Rebus.Routing.TypeBased;
 using System;
 using System.Threading.Tasks;
@@ -13,10 +12,10 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            MainAsync(args[0]).GetAwaiter().GetResult();
+            MainAsync().GetAwaiter().GetResult();
         }
 
-        static async Task MainAsync(string qeueuName = "subscriber1")
+        static async Task MainAsync()
         {
             using (var activator = new BuiltinHandlerActivator())
             {
@@ -24,7 +23,7 @@ namespace ConsoleApp1
 
                 activator.Handle<ApplicationReceivedMessage>((message) =>
                 {
-                    Console.WriteLine($"Got message of {nameof(message)} with value {message.ID}.");
+                    Console.WriteLine($"Got message of {nameof(message)} with value {(char)message.ID}.");
                     return Task.CompletedTask;
                 });
 

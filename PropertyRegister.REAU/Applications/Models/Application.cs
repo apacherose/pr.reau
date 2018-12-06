@@ -113,6 +113,8 @@ namespace PropertyRegister.REAU.Applications.Models
         /// </summary>
         public DateTime RegistrationTime { get; set; }
 
+        public bool IsReport { get; set; }
+
         public bool IsMainApplication => MainApplicationID == null;
     }    
 }

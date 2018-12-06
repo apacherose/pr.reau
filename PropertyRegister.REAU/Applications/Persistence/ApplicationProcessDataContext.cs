@@ -18,24 +18,27 @@ namespace PropertyRegister.REAU.Applications.Persistence
         {
         }
 
-        public void ApplicationCreate(long? mainApplicationID, long serviceInstanceID, string applIdentifier, string reportIdentifier,
+        public void ApplicationCreate(long? mainApplicationID, long serviceInstanceID, bool isReport,
             int status, DateTime statusTime, int applicationTypeID, DateTime registrationTime, 
-            out long applicationID)
+            out long applicationID, out string applIdentifier, out string reportIdentifier)
         {
             var parameters = new OracleDynamicParameters();
             parameters.Add("p_ServiceInstance_Id", OracleDbType.Int64, serviceInstanceID);
             parameters.Add("p_MainApplication_Id", OracleDbType.Int64, mainApplicationID);
-            parameters.Add("p_ApplicationIdentifier", OracleDbType.Varchar2, applIdentifier);
-            parameters.Add("p_ReportIdentifier", OracleDbType.Varchar2, reportIdentifier);
+            parameters.Add("p_Is_Report", OracleDbType.Int32, isReport);
             parameters.Add("p_Status", OracleDbType.Int16, status);
             parameters.Add("p_StatusTime", OracleDbType.TimeStamp, statusTime);
             parameters.Add("p_ApplicationType_Id", OracleDbType.Int16, applicationTypeID);
             parameters.Add("p_RegistrationTime", OracleDbType.TimeStamp, registrationTime);
             parameters.Add("p_Application_Id_Out", OracleDbType.Int64, null, System.Data.ParameterDirection.Output);
+            parameters.Add("p_Application_Identifier_Out", OracleDbType.Varchar2, null, System.Data.ParameterDirection.Output, 100);
+            parameters.Add("p_Report_Identifier_Out", OracleDbType.Varchar2, null, System.Data.ParameterDirection.Output, 100);
 
             DbConnection.SPExecute("pkg_services.p_Applications_Create", parameters);
 
-            applicationID = parameters.Get<OracleDecimal>("p_Application_Id_Out").ToInt64();
+            applicationID = parameters.GetLongNumber("p_Application_Id_Out");
+            applIdentifier = parameters.GetString("p_Application_Identifier_Out");
+            reportIdentifier = parameters.GetString("p_Report_Identifier_Out");
         }
 
         public void ApplicationUpdate(long applicationID, long? mainApplicationID, long serviceInstanceID, string applIdentifier, string reportIdentifier, 

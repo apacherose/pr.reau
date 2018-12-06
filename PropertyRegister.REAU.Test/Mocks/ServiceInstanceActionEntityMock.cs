@@ -1,4 +1,5 @@
-﻿using PropertyRegister.REAU.Applications.Models;
+﻿using CNSys.Data;
+using PropertyRegister.REAU.Applications.Models;
 using PropertyRegister.REAU.Applications.Persistence;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace PropertyRegister.REAU.Test.Mocks
 {
-    public class ServiceInstanceActionEntityMock : IServiceActionEntity
+    public class ServiceInstanceActionEntityMock : IServiceActionRepository
     {
+        public bool IsReadOnly => throw new NotImplementedException();
+
         public void Create(ServiceAction item)
         {
             item.ServiceActionID = new Random().Next(1, 100);
@@ -25,6 +28,11 @@ namespace PropertyRegister.REAU.Test.Mocks
             throw new NotImplementedException();
         }
 
+        public ServiceAction Read(long? key)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<ServiceAction> Search(ServiceActionSearchCriteria searchCriteria)
         {
             return Enumerable.Empty<ServiceAction>();
@@ -33,6 +41,11 @@ namespace PropertyRegister.REAU.Test.Mocks
         public IEnumerable<ServiceAction> Search(object state, ServiceActionSearchCriteria searchCriteria)
         {
             return Enumerable.Empty<ServiceAction>();
+        }
+
+        public IEnumerable<ServiceAction> Search(PagedDataState state, ServiceActionSearchCriteria searchCriteria)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(ServiceAction item)

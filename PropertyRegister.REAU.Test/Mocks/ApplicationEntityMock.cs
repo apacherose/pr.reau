@@ -1,4 +1,5 @@
-﻿using PropertyRegister.REAU.Applications;
+﻿using CNSys.Data;
+using PropertyRegister.REAU.Applications;
 using PropertyRegister.REAU.Applications.Models;
 using PropertyRegister.REAU.Applications.Persistence;
 using System;
@@ -7,9 +8,11 @@ using System.Linq;
 
 namespace PropertyRegister.REAU.Test.Mocks
 {
-    public class ApplicationEntityMock : IApplicationEntity
+    public class ApplicationEntityMock : IApplicationRepository
     {
         private readonly DbDataSets DataSets;
+
+        public bool IsReadOnly => throw new NotImplementedException();
 
         public ApplicationEntityMock(DbDataSets dataSets)
         {
@@ -100,6 +103,16 @@ namespace PropertyRegister.REAU.Test.Mocks
         }
 
         public void Update(Applications.Models.Application item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Applications.Models.Application Read(long? key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Applications.Models.Application> Search(PagedDataState state, ApplicationSearchCriteria searchCriteria)
         {
             throw new NotImplementedException();
         }

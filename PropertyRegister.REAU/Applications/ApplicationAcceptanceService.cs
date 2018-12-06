@@ -24,16 +24,16 @@ namespace PropertyRegister.REAU.Applications
         private readonly IActionDispatcher ActionDispatcher;
         private readonly IApplicationInfoResolver ApplicationInfoResolver;
 
-        private readonly IApplicationEntity ApplicationEntity;
-        private readonly IApplicationDocumentEntity ApplicationDocumentEntity;
-        private readonly IServiceActionEntity ServiceActionEntity;
-        private readonly IServiceInstanceEntity ServiceInstanceEntity;
+        private readonly IApplicationRepository ApplicationRepository;
+        private readonly IApplicationDocumentRepository ApplicationDocumentRepository;
+        private readonly IServiceActionRepository ServiceActionRepository;
+        private readonly IServiceInstanceRepository ServiceInstanceRepository;
 
         public ApplicationAcceptanceService(
-            IApplicationEntity applicationEntity,
-            IServiceInstanceEntity serviceInstanceEntity,
-            IApplicationDocumentEntity applicationDocumentEntity,
-            IServiceActionEntity serviceActionEntity,
+            IApplicationRepository applicationRepository,
+            IServiceInstanceRepository serviceInstanceRepository,
+            IApplicationDocumentRepository applicationDocumentRepository,
+            IServiceActionRepository serviceActionRepository,
 
             IDocumentService documentService,
             INomenclaturesProvider nomenclaturesProvider,
@@ -41,10 +41,10 @@ namespace PropertyRegister.REAU.Applications
             IActionDispatcher actionDispatcher,
             IApplicationInfoResolver applicationInfoResolver)
         {
-            ApplicationEntity = applicationEntity;
-            ServiceInstanceEntity = serviceInstanceEntity;
-            ApplicationDocumentEntity = applicationDocumentEntity;
-            ServiceActionEntity = serviceActionEntity;
+            ApplicationRepository = applicationRepository;
+            ServiceInstanceRepository = serviceInstanceRepository;
+            ApplicationDocumentRepository = applicationDocumentRepository;
+            ServiceActionRepository = serviceActionRepository;
 
             DocumentService = documentService;
             NomenclaturesProvider = nomenclaturesProvider;
@@ -68,7 +68,7 @@ namespace PropertyRegister.REAU.Applications
                         ApplicationStatus = application.Status.Value,
                         ActionTypeID = ServicеActionTypes.ApplicationAcceptance
                     };
-                    ServiceActionEntity.Create(action);
+                    ServiceActionRepository.Create(action);
 
                     var result = new Results.ApplicationAcceptedResult()
                     {
@@ -108,12 +108,12 @@ namespace PropertyRegister.REAU.Applications
                     ApplicantCIN = "100"
                 };
 
-                ServiceInstanceEntity.Create(serviceInstance);
+                ServiceInstanceRepository.Create(serviceInstance);
                 serviceInstanceID = serviceInstance.ServiceInstanceID;
             }
             else
             {
-                var mainApp = ApplicationEntity.Search(new ApplicationSearchCriteria() { ApplicationIdentifier = appInfo.MainApplicationNumber }).SingleOrDefault();
+                var mainApp = ApplicationRepository.Search(new ApplicationSearchCriteria() { ApplicationIdentifier = appInfo.MainApplicationNumber }).SingleOrDefault();
                 if (mainApp == null)
                     throw new InvalidOperationException("Cannot find initial main application!");
 
@@ -127,12 +127,11 @@ namespace PropertyRegister.REAU.Applications
                 ApplicationTypeID = serviceType.ApplicationTypeID,
                 MainApplicationID = mainApplicationID,
                 RegistrationTime = DateTime.UtcNow,
-                //OfficeID = 0, // from xml
-                Status = ApplicationStatuses.Accepted,
-                //ApplicantID = 0, // from authentication
+                IsReport = serviceType.IsReport,
+                Status = ApplicationStatuses.Accepted
             };
 
-            ApplicationEntity.Create(application);
+            ApplicationRepository.Create(application);
 
             await SaveApplicationDocumentsAsync(application.ApplicationID.Value, appInfo, xml);
 
@@ -173,7 +172,7 @@ namespace PropertyRegister.REAU.Applications
 
             foreach (var applDoc in applicationDocuments)
             {
-                ApplicationDocumentEntity.Create(applDoc);
+                ApplicationDocumentRepository.Create(applDoc);
             }
         }
     }

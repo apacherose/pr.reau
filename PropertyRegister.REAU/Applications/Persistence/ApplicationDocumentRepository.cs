@@ -1,15 +1,15 @@
 ﻿using PropertyRegister.REAU.Applications.Models;
-using PropertyRegister.REAU.Persistence;
+using CNSys.Data;
 
 namespace PropertyRegister.REAU.Applications.Persistence
 {
-    public interface IApplicationDocumentEntity : IEntity<ApplicationDocument, long?, object>
+    public interface IApplicationDocumentRepository : IRepository<ApplicationDocument, long?, object>
     {
     }
 
-    public class ApplicationDocumentEntity : EntityBase<ApplicationDocument, long?, object, ApplicationProcessDataContext>, IApplicationDocumentEntity
+    public class ApplicationDocumentRepository : RepositoryBase<ApplicationDocument, long?, object, ApplicationProcessDataContext>, IApplicationDocumentRepository
     {
-        public ApplicationDocumentEntity() : base(false)
+        public ApplicationDocumentRepository() : base(false)
         {
         }
 

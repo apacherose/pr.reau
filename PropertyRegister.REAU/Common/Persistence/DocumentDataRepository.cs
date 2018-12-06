@@ -1,4 +1,5 @@
-﻿using Oracle.ManagedDataAccess.Client;
+﻿using CNSys.Data;
+using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using PropertyRegister.REAU.Common.Models;
 using PropertyRegister.REAU.Persistence;
@@ -18,14 +19,14 @@ namespace PropertyRegister.REAU.Common.Persistence
         public List<string> Identifiers { get; set; }
     }
 
-    public interface IDocumentDataEntity : IEntity<DocumentData, Guid, DocumentDataSearchCriteria>
+    public interface IDocumentDataRepository : IRepository<DocumentData, Guid, DocumentDataSearchCriteria>
     {
         Stream ReadContent(string documentIdentifier);
     }
 
-    public class DocumentDataEntity : EntityBase<DocumentData, Guid, DocumentDataSearchCriteria, CommonDataContext>, IDocumentDataEntity
+    public class DocumentDataRepository : RepositoryBase<DocumentData, Guid, DocumentDataSearchCriteria, CommonDataContext>, IDocumentDataRepository
     {
-        public DocumentDataEntity()
+        public DocumentDataRepository()
             : base(false)
         {
         }

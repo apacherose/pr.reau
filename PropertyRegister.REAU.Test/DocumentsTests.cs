@@ -21,7 +21,7 @@ namespace PropertyRegister.REAU.Test
         public DocumentsTests()
         {
             var services = new ServiceCollection();
-            services.AddTransient<IDocumentDataEntity, DocumentDataEntity>();
+            services.AddTransient<IDocumentDataRepository, DocumentDataRepository>();
 
             Services = services;
             ServiceProvider = services.BuildServiceProvider();
@@ -39,7 +39,7 @@ namespace PropertyRegister.REAU.Test
             await DbContextHelper.TransactionalOperationAsync(() =>
             {
                 string filename = @"C:\Users\vachev\Desktop\scripts.sql";
-                var entity = ServiceProvider.GetRequiredService<IDocumentDataEntity>();
+                var entity = ServiceProvider.GetRequiredService<IDocumentDataRepository>();
 
                 using (var fs = File.OpenRead(filename))
                 {

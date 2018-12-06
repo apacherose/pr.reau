@@ -15,11 +15,11 @@ namespace PropertyRegister.REAU.Common
 
     public class IdempotentOperationExecutor : IIdempotentOperationExecutor
     {
-        private readonly IServiceOperationEntity ServiceOperationEntity;
+        private readonly IServiceOperationRepository ServiceOperationRepository;
 
-        public IdempotentOperationExecutor(IServiceOperationEntity serviceOperationEntity)
+        public IdempotentOperationExecutor(IServiceOperationRepository serviceOperationRepository)
         {
-            ServiceOperationEntity = serviceOperationEntity;
+            ServiceOperationRepository = serviceOperationRepository;
         }
 
         public async Task<T> ExecuteAsync<T>(string operationID, ServiceOperationTypes operationType, 
@@ -37,7 +37,7 @@ namespace PropertyRegister.REAU.Common
                         ServiceOperationType = operationType
                     };
 
-                    ServiceOperationEntity.Create(operation);
+                    ServiceOperationRepository.Create(operation);
 
                     if (operation.IsCompleted)
                     {
@@ -52,7 +52,7 @@ namespace PropertyRegister.REAU.Common
 
                         operation.Result = JsonConvert.SerializeObject(res);
                         operation.IsCompleted = true;
-                        ServiceOperationEntity.Update(operation);
+                        ServiceOperationRepository.Update(operation);
 
                         firstOperationCall = true;
                         return res;

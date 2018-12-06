@@ -29,12 +29,12 @@ namespace PropertyRegister.REAU.Test
         {
             var services = new ServiceCollection();
             services.AddTransient<ApplicationService>();
-            services.AddTransient<IApplicationEntity, ApplicationEntity>();
-            services.AddTransient<IServiceInstanceEntity, ServiceInstanceEntity>();
-            services.AddTransient<IServiceOperationEntity, ServiceOperationEntity>();
-            services.AddTransient<IApplicationDocumentEntity, ApplicationDocumentEntity>();
+            services.AddTransient<IApplicationRepository, ApplicationRepository>();
+            services.AddTransient<IServiceInstanceRepository, ServiceInstanceRepository>();
+            services.AddTransient<IServiceOperationRepository, ServiceOperationRepository>();
+            services.AddTransient<IApplicationDocumentRepository, ApplicationDocumentRepository>();
 
-            services.AddTransient<IServiceActionEntity, ServiceInstanceActionEntityMock>();
+            services.AddTransient<IServiceActionRepository, ServiceInstanceActionEntityMock>();
             services.AddTransient<IDocumentService, DocumentServiceMock>();
             services.AddTransient<IApplicationServiceTypeCollection, ApplicationServiceTypesCollectionMock>();
             services.AddTransient<IPropertyRegisterClient, PropertyRegisterClientMock>();

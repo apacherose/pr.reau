@@ -27,7 +27,7 @@ namespace PropertyRegister.REAU.Test
         {
             var services = new ServiceCollection();
             services.AddTransient<ApplicationService>();
-            services.AddTransient<IApplicationEntity, ApplicationEntityMock>();
+            services.AddTransient<IApplicationRepository, ApplicationEntityMock>();
             services.AddTransient<IDocumentService, DocumentServiceMock>();
             services.AddTransient<IApplicationServiceTypeCollection, ApplicationServiceTypesCollectionMock>();
             services.AddTransient<IPropertyRegisterClient, PropertyRegisterClientMock>();
@@ -129,13 +129,13 @@ namespace PropertyRegister.REAU.Test
         [TestMethod]
         public void Test_Application_CRUD_Create()
         {
-            new ApplicationEntity().Create(new Applications.Models.Application());
+            new ApplicationRepository().Create(new Applications.Models.Application());
         }
 
         [TestMethod]
         public void Test_ServiceOperation_Search()
         {
-            var entity = new ServiceOperationEntity();
+            var entity = new ServiceOperationRepository();
 
             var data = entity.Search(new ServiceOperationSearchCriteria()
             {
@@ -148,7 +148,7 @@ namespace PropertyRegister.REAU.Test
         [TestMethod]
         public void Test_ServiceOperation_Create()
         {
-            var entity = new ServiceOperationEntity();
+            var entity = new ServiceOperationRepository();
             
             var operation = new Common.Models.ServiceOperation()
             {

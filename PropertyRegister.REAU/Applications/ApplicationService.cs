@@ -26,12 +26,12 @@ namespace PropertyRegister.REAU.Applications
         private readonly IPaymentManager PaymentManager;
         private readonly IPropertyRegisterClient PropertyRegisterClient;
 
-        private readonly IApplicationEntity ApplicationEntity;
-        private readonly IServiceActionEntity ServiceActionEntity;
+        private readonly IApplicationRepository ApplicationRepository;
+        private readonly IServiceActionRepository ServiceActionRepository;
 
         public ApplicationService(
-            IApplicationEntity applicationEntity,
-            IServiceActionEntity serviceActionEntity,            
+            IApplicationRepository applicationRepository,
+            IServiceActionRepository serviceActionRepository,            
             IPropertyRegisterClient propertyRegisterClient,
             INomenclaturesProvider nomenclaturesProvider,
             IIdempotentOperationExecutor idempotentOperationExecutor,
@@ -39,8 +39,8 @@ namespace PropertyRegister.REAU.Applications
             IPaymentManager paymentManager,
             IApplicationInfoResolver applicationInfoResolver)
         {
-            ApplicationEntity = applicationEntity;
-            ServiceActionEntity = serviceActionEntity;
+            ApplicationRepository = applicationRepository;
+            ServiceActionRepository = serviceActionRepository;
 
             PropertyRegisterClient = propertyRegisterClient;
             NomenclaturesProvider = nomenclaturesProvider;
@@ -51,9 +51,9 @@ namespace PropertyRegister.REAU.Applications
         
         public async Task<ApplicationProcessedResult> ProcessApplicationAsync(long applicationID)
         {
-            var operationResult = await IdempotentOperationExecutor.ExecuteAsync(applicationID.ToString(), Common.Models.ServiceOperationTypes.ProcessServiceApplication, (oid) =>
+            var result = await IdempotentOperationExecutor.ExecuteAsync(applicationID.ToString(), Common.Models.ServiceOperationTypes.ProcessServiceApplication, (oid) =>
             {
-                var application = ApplicationEntity.Search(new ApplicationSearchCriteria() { ApplicationID = applicationID }).SingleOrDefault();
+                var application = ApplicationRepository.Search(new ApplicationSearchCriteria() { ApplicationID = applicationID }).SingleOrDefault();
 
                 if (application == null && application.Status != ApplicationStatuses.Accepted)
                     throw new InvalidOperationException();
@@ -68,23 +68,24 @@ namespace PropertyRegister.REAU.Applications
                 {
                     return SendCorrectionApplicationToPRAsync(oid, application);
                 }
+            }, async (operationResult) => {
+
+                // when application is free should be prepared to be sent to PR immediatelly
+                if (operationResult.ApplicationStatus == ApplicationStatuses.WaitingRegistration ||
+                     operationResult.ApplicationStatus == ApplicationStatuses.InProgress)
+                {
+                    await ActionDispatcher.SendAsync("ApplicationWaitingRegistration", operationResult.ApplicationID);
+                }
             });
-
-            // when application is free should be prepared to be sent to PR immediatelly
-            if (operationResult.ApplicationStatus == ApplicationStatuses.WaitingRegistration ||
-                 operationResult.ApplicationStatus == ApplicationStatuses.InProgress)
-            {
-                await ActionDispatcher.SendAsync("ApplicationWaitingRegistration", operationResult.ApplicationID);
-            }
-
-            return operationResult;
+            
+            return result;
         }
 
         public async Task ProcessServicePaymentChangeAsync(string paymentIdentifier, object paymentData)
         {
             var operationResult = await IdempotentOperationExecutor.ExecuteAsync(paymentIdentifier, Common.Models.ServiceOperationTypes.ProcessServicePayment, (oid) =>
             {
-                var application = ApplicationEntity
+                var application = ApplicationRepository
                     .Search(new ApplicationSearchCriteria() { PaymentIdentifier = paymentIdentifier }).SingleOrDefault();
 
                 if (application == null || application.Status != ApplicationStatuses.WaitingPayment)
@@ -94,7 +95,7 @@ namespace PropertyRegister.REAU.Applications
 
                 application.Status = serviceType.IsReport ? ApplicationStatuses.InProgress : ApplicationStatuses.WaitingRegistration;
 
-                ApplicationEntity.Update(application);
+                ApplicationRepository.Update(application);
 
                 var action = new ServiceAction()
                 {
@@ -104,7 +105,7 @@ namespace PropertyRegister.REAU.Applications
                     ApplicationStatus = application.Status.Value,
                     ActionTypeID = ServicеActionTypes.PaymentChange,
                 };
-                ServiceActionEntity.Create(action);
+                ServiceActionRepository.Create(action);
 
                 return Task.FromResult(new Results.PaymentProcessedResult()
                 {
@@ -128,7 +129,7 @@ namespace PropertyRegister.REAU.Applications
             // ANALYZE prResponse
 
             application.Status = ApplicationStatuses.Completed;
-            ApplicationEntity.Update(application);
+            ApplicationRepository.Update(application);
 
             var action = new ServiceAction()
             {
@@ -138,7 +139,7 @@ namespace PropertyRegister.REAU.Applications
                 ApplicationStatus = application.Status.Value,
                 ActionTypeID = ServicеActionTypes.ApplicationRegistrationInPR,
             };
-            ServiceActionEntity.Create(action);
+            ServiceActionRepository.Create(action);
 
             return new Results.ApplicationProcessedResult()
             {
@@ -153,14 +154,14 @@ namespace PropertyRegister.REAU.Applications
             if (servicePayment.Status != PaymentStatuses.Ordered)
                 throw new Exception(servicePayment.ErrorDescription);
 
-            ApplicationEntity.CreateServicePayment(servicePayment);
+            ApplicationRepository.CreateServicePayment(servicePayment);
 
             var serviceType = NomenclaturesProvider.GetApplicationServiceTypes().Single(t => t.ApplicationTypeID == application.ApplicationTypeID);
 
             application.Status = serviceType.IsFree ?
                     (serviceType.IsReport ? ApplicationStatuses.InProgress : ApplicationStatuses.WaitingRegistration) : ApplicationStatuses.WaitingPayment;
 
-            ApplicationEntity.Update(application);
+            ApplicationRepository.Update(application);
 
             var action = new ServiceAction()
             {
@@ -170,7 +171,7 @@ namespace PropertyRegister.REAU.Applications
                 ApplicationStatus = application.Status.Value,
                 ActionTypeID = ServicеActionTypes.RequestedPayment,
             };
-            ServiceActionEntity.Create(action);
+            ServiceActionRepository.Create(action);
             
             return new Results.ApplicationProcessedResult
             {

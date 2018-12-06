@@ -1,5 +1,5 @@
 ﻿using PropertyRegister.REAU.Common.Models;
-using PropertyRegister.REAU.Persistence;
+using CNSys.Data;
 using System;
 using System.Collections.Generic;
 
@@ -12,13 +12,13 @@ namespace PropertyRegister.REAU.Common.Persistence
         public ServiceOperationTypes? ServiceOperationType { get; set; }
     }
 
-    public interface IServiceOperationEntity : IEntity<ServiceOperation, long?, ServiceOperationSearchCriteria>
+    public interface IServiceOperationRepository : IRepository<ServiceOperation, long?, ServiceOperationSearchCriteria>
     {
     }
 
-    public class ServiceOperationEntity : EntityBase<ServiceOperation, long?, ServiceOperationSearchCriteria, CommonDataContext>, IServiceOperationEntity
+    public class ServiceOperationRepository : RepositoryBase<ServiceOperation, long?, ServiceOperationSearchCriteria, CommonDataContext>, IServiceOperationRepository
     {
-        public ServiceOperationEntity() 
+        public ServiceOperationRepository() 
             : base(false)
         {
         }

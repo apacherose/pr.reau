@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using PropertyRegister.REAU.Applications.Models;
-using PropertyRegister.REAU.Persistence;
+using CNSys.Data;
 
 namespace PropertyRegister.REAU.Applications.Persistence
 {
-    public interface IServiceInstanceEntity : IEntity<ServiceInstance, long?, object>
+    public interface IServiceInstanceRepository : IRepository<ServiceInstance, long?, object>
     {
     }
 
-    public class ServiceInstanceEntity : EntityBase<ServiceInstance, long?, object, ApplicationProcessDataContext>, IServiceInstanceEntity
+    public class ServiceInstanceRepository : RepositoryBase<ServiceInstance, long?, object, ApplicationProcessDataContext>, IServiceInstanceRepository
     {
-        public ServiceInstanceEntity() : base(false)
+        public ServiceInstanceRepository() : base(false)
         {
         }
 

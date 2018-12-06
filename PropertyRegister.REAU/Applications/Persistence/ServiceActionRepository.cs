@@ -1,6 +1,5 @@
-﻿using PropertyRegister.REAU.Applications.Models;
-using PropertyRegister.REAU.Persistence;
-using System;
+﻿using CNSys.Data;
+using PropertyRegister.REAU.Applications.Models;
 using System.Collections.Generic;
 
 namespace PropertyRegister.REAU.Applications.Persistence
@@ -12,13 +11,13 @@ namespace PropertyRegister.REAU.Applications.Persistence
         public ServicеActionTypes? ActionType { get; internal set; }
     }
 
-    public interface IServiceActionEntity : IEntity<ServiceAction, long?, ServiceActionSearchCriteria>
+    public interface IServiceActionRepository : IRepository<ServiceAction, long?, ServiceActionSearchCriteria>
     {
     }
 
-    public class ServiceActionEntity : EntityBase<ServiceAction, long?, ServiceActionSearchCriteria, ApplicationProcessDataContext>, IServiceActionEntity
+    public class ServiceActionRepository : RepositoryBase<ServiceAction, long?, ServiceActionSearchCriteria, ApplicationProcessDataContext>, IServiceActionRepository
     {
-        public ServiceActionEntity() : base(false)
+        public ServiceActionRepository() : base(false)
         {
         }
 
