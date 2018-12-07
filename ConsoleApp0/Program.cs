@@ -19,7 +19,8 @@ namespace ConsoleApp0
             string connString = "Data Source=pr_reau; User ID=pr_reau_dev; Password=pr_reau_dev;";
 
             using (var activator = new BuiltinHandlerActivator())
-            {
+            {                
+
                 Configure.With(activator)
                     //.Transport(t => t.UseMsmqAsOneWayClient())
                     .Transport(t => t.UseOracleAsOneWayClient(connString, "mbus_messages"))

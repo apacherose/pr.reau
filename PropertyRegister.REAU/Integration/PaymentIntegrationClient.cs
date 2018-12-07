@@ -16,12 +16,14 @@ namespace PropertyRegister.REAU.Integration
     {
         public Task<PaymentResponse> InitiatePaymentAsync(PaymentRequest paymentRequest)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new PaymentResponse() {
+                PaymentIdentifier = paymentRequest.PaymentFor
+            });
         }
 
         public Task<PaymentResponse> InitiateServiceApplicationAsync(ServiceRequest serviceRequest)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new PaymentResponse());
         }
     }
 

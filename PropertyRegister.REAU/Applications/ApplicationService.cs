@@ -12,20 +12,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace PropertyRegister.REAU.Applications
-{
-    public interface IActionDispatcher
+{    
+    public interface IApplicationProcessingService
     {
-        Task SendAsync(object actionData);
+        Task<ApplicationProcessedResult> ProcessApplicationAsync(long applicationID);
     }
 
-    public class ApplicationService
+    public class ApplicationService : IApplicationProcessingService
     {
         private readonly INomenclaturesProvider NomenclaturesProvider;
         private readonly IIdempotentOperationExecutor IdempotentOperationExecutor;
         private readonly IActionDispatcher ActionDispatcher;
         private readonly IPaymentManager PaymentManager;
         private readonly IPropertyRegisterClient PropertyRegisterClient;
-
         private readonly IApplicationRepository ApplicationRepository;
         private readonly IServiceActionRepository ServiceActionRepository;
 
@@ -36,12 +35,10 @@ namespace PropertyRegister.REAU.Applications
             INomenclaturesProvider nomenclaturesProvider,
             IIdempotentOperationExecutor idempotentOperationExecutor,
             IActionDispatcher actionDispatcher,
-            IPaymentManager paymentManager,
-            IApplicationInfoResolver applicationInfoResolver)
+            IPaymentManager paymentManager)
         {
             ApplicationRepository = applicationRepository;
             ServiceActionRepository = serviceActionRepository;
-
             PropertyRegisterClient = propertyRegisterClient;
             NomenclaturesProvider = nomenclaturesProvider;
             IdempotentOperationExecutor = idempotentOperationExecutor;            
@@ -53,7 +50,7 @@ namespace PropertyRegister.REAU.Applications
         {
             var result = await IdempotentOperationExecutor.ExecuteAsync(applicationID.ToString(), Common.Models.ServiceOperationTypes.ProcessServiceApplication, (oid) =>
             {
-                var application = ApplicationRepository.Search(new ApplicationSearchCriteria() { ApplicationID = applicationID }).SingleOrDefault();
+                var application = ApplicationRepository.Search(new ApplicationSearchCriteria() { ApplicationIDs = new List<long> { applicationID } }).SingleOrDefault();
 
                 if (application == null && application.Status != ApplicationStatuses.Accepted)
                     throw new InvalidOperationException();

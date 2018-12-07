@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using PropertyRegister.REAU.Applications;
+using PropertyRegister.REAU.Common;
 using Rebus.Activation;
 using Rebus.Bus;
 using Rebus.Config;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace PropertyRegister.REAU.Integration
@@ -29,12 +25,12 @@ namespace PropertyRegister.REAU.Integration
     {
         public Task<PropertyRegisterApplicationResult> ExecuteReportApplicationAsync(object request)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new PropertyRegisterApplicationResult());
         }
 
         public Task<ServiceApplicationResult> RegisterServiceApplicationAsync(object request)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new ServiceApplicationResult());
         }
     }
 }

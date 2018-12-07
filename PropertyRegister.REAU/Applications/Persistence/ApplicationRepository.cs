@@ -2,12 +2,13 @@
 using PropertyRegister.REAU.Applications.Models;
 using System;
 using System.Collections.Generic;
+using CNSys.Extensions;
 
 namespace PropertyRegister.REAU.Applications.Persistence
 {
     public class ApplicationSearchCriteria
     {
-        public long? ApplicationID { get; set; }
+        public List<long> ApplicationIDs { get; set; }
         public long? MainApplicationID { get; set; }
         public long? ServiceInstanceID { get; set; }
         public string ApplicationIdentifier { get; set; }
@@ -48,11 +49,13 @@ namespace PropertyRegister.REAU.Applications.Persistence
         {            
             IEnumerable<Application> res;
 
-            using (var data = context.ApplicationSearch(null, searchCriteria.MainApplicationID, searchCriteria.ServiceInstanceID, 
+            string ids = string.Join(",", searchCriteria.ApplicationIDs.ToArray());
+
+            using (var data = context.ApplicationSearch(ids, searchCriteria.MainApplicationID, searchCriteria.ServiceInstanceID, 
                 searchCriteria.ApplicationIdentifier, searchCriteria.ReportIdentifier, (int?)searchCriteria.ApplicationStatus, searchCriteria.ApplicationType, 
                 1, 20, out int count))
             {
-                 res = data.Read<Application>();
+                 res = data.ReadToList<Application>();
             }
 
             return res;

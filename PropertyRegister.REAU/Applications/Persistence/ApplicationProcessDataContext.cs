@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using PropertyRegister.REAU.Applications.Models;
@@ -16,6 +17,7 @@ namespace PropertyRegister.REAU.Applications.Persistence
     {
         public ApplicationProcessDataContext(DbConnection dbConnection) : base(dbConnection)
         {
+            SqlMapper.SetTypeMap(typeof(Application), DataContextHelper.ColumnMap<Application>());
         }
 
         public void ApplicationCreate(long? mainApplicationID, long serviceInstanceID, bool isReport,
@@ -70,6 +72,8 @@ namespace PropertyRegister.REAU.Applications.Persistence
             parameters.Add("p_ReportIdentifier", OracleDbType.Varchar2, reportIdentifier);
             parameters.Add("p_Status", OracleDbType.Int16, status);
             parameters.Add("p_ApplicationType_Id", OracleDbType.Int16, applicationTypeID);
+            parameters.Add("p_StartIndex", OracleDbType.Int32, p_StartIndex);
+            parameters.Add("p_PageSize", OracleDbType.Int32, p_PageSize);
             parameters.Add("p_ResultsCount_out", OracleDbType.Int32, null, System.Data.ParameterDirection.Output);
             parameters.Add("cv_1", OracleDbType.RefCursor, ParameterDirection.Output);
 

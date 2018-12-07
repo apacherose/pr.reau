@@ -1,4 +1,5 @@
 ﻿using PropertyRegister.REAU.Applications;
+using PropertyRegister.REAU.Applications.Results;
 using Rebus.Activation;
 using Rebus.Config;
 using Rebus.Handlers;
@@ -22,17 +23,22 @@ namespace ConsoleApp1
 
             using (var activator = new BuiltinHandlerActivator())
             {                
-                activator.Handle<ApplicationReceivedMessage>((message) =>
-                {
-                    Console.WriteLine($"Got message of {nameof(message)} with value {(char)message.ID}.");
+                //activator.Handle<ApplicationReceivedMessage>((message) =>
+                //{
+                //    Console.WriteLine($"Got message of {nameof(message)} with value {(char)message.ID}.");
 
-                    return Task.CompletedTask;
-                });
+                //    return Task.CompletedTask;
+                //});
+
+                activator.Register(() => new ApplicationAcceptedResultHandler1());
 
                 var bus = Configure.With(activator)                    
                     //.Transport(t => t.UseMsmq("consumer.input"))
-                    .Transport(t => t.UseOracle(connString, "mbus_messages", "consumer.input"))
-                    .Routing(r => r.TypeBased().Map<ApplicationReceivedMessage>("consumer.input"))
+                    .Transport(t => t.UseOracle(connString, "mbus_messages", "error"))
+                    .Routing(r => r.TypeBased()
+                                        .Map<ApplicationReceivedMessage>("consumer.input")
+                                        .Map<ApplicationAcceptedResult>("error"))
+
                     .Options(c => c.SimpleRetryStrategy(maxDeliveryAttempts: 3, errorQueueAddress: "q_error"))
                     .Start();
 
@@ -43,6 +49,16 @@ namespace ConsoleApp1
                 Console.ReadLine();
                 Console.WriteLine("Quitting...");
             }
+        }
+    }
+
+    public class ApplicationAcceptedResultHandler1 : IHandleMessages<ApplicationAcceptedResult>
+    {        
+        public Task Handle(ApplicationAcceptedResult message)
+        {
+            Console.WriteLine($"Handled message of {nameof(message)} with value {message.ApplicationNumber}.");
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using PropertyRegister.REAU.Applications;
+using PropertyRegister.REAU.Applications.MessageHandlers;
 using PropertyRegister.REAU.Applications.Results;
 using Rebus.Activation;
 using Rebus.Config;
@@ -9,6 +10,7 @@ using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PropertyRegister.REAU.MessageProcessor
 {
@@ -17,16 +19,24 @@ namespace PropertyRegister.REAU.MessageProcessor
         static void Main(string[] args)
         {
             IHost host = null;
+
             var hostBuilder = new HostBuilder()
                 .ConfigureServices((context, services) =>
                     {
+                        // applications DI
+                        services.AddApplicationsPersistence()
+                            .AddApplicationsProcessing()
+                            .AddIntegrationClients()
+                            .AddREAUInfrastructureServices();
+
                         services.AutoRegisterHandlersFromAssemblyOf<ApplicationAcceptedResultHandler>();
 
                         services.AddRebus(rconfig => rconfig
-                            .Transport(t => t.UseOracle(System.Configuration.ConfigurationManager.ConnectionStrings["defaultRWConnectionString"].ConnectionString, "mbus_messages", "q_appl_acceptance"))
-                            .Routing(r => r.TypeBased().Map<ApplicationAcceptedResult>("q_appl_acceptance")));
+                            .Transport(t => t.UseOracle(System.Configuration.ConfigurationManager.ConnectionStrings["defaultRWConnectionString"].ConnectionString, "mbus_messages", "q_appl_processing"))
+                            .Routing(r => r.TypeBased().Map<ApplicationAcceptedResult>("q_appl_processing")
+                                                       .Map<ApplicationProcessedResult>("q_appl_processing")
+                                    ));
                     });
-
             try
             {
                 host = hostBuilder.Build();
@@ -37,7 +47,7 @@ namespace PropertyRegister.REAU.MessageProcessor
                 host.Start();
 
                 Console.WriteLine("Press ENTER to quit");
-                Console.ReadLine();                
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
@@ -47,44 +57,9 @@ namespace PropertyRegister.REAU.MessageProcessor
             {
                 Console.WriteLine("Quitting...");
 
-                host.Dispose();
+                host?.Dispose();
                 host = null;
             }
-        }
-
-        static async Task MainAsync()
-        {
-            string connString = "Data Source=pr_reau; User ID=pr_reau_dev; Password=pr_reau_dev;";
-
-            using (var activator = new BuiltinHandlerActivator())
-            {
-                activator.Handle<ApplicationReceivedMessage>((message) =>
-                {
-                    Console.WriteLine($"Got message of {nameof(message)} with value {(char)message.ID}.");
-
-                    return Task.CompletedTask;
-                });
-
-                var bus = Configure.With(activator)
-                    .Transport(t => t.UseOracle(connString, "mbus_messages", "consumer.input"))
-                    .Routing(r => r.TypeBased().Map<ApplicationReceivedMessage>("consumer.input"))
-                    .Options(c => c.SimpleRetryStrategy(maxDeliveryAttempts: 3, errorQueueAddress: "q_error"))
-                    .Start();
-
-                Console.WriteLine("Press ENTER to quit");
-                Console.ReadLine();
-                Console.WriteLine("Quitting...");
-            }
-        }
-    }
-
-    public class ApplicationAcceptedResultHandler : IHandleMessages<ApplicationAcceptedResult>
-    {
-        public Task Handle(ApplicationAcceptedResult message)
-        {
-            Console.WriteLine($"Handled message of {nameof(message)} with value {message.ApplicationNumber}.");
-
-            return Task.CompletedTask;
-        }
-    }
+        }       
+    }    
 }

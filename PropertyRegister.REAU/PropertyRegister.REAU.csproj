@@ -48,6 +48,7 @@
     <Compile Include="Applications\ApplicationReceivedMessage.cs" />
     <Compile Include="Applications\ApplicationService.cs" />
     <Compile Include="Applications\Integration\Objects.cs" />
+    <Compile Include="Applications\MessageHandlers\ApplicationAcceptedResultHandler.cs" />
     <Compile Include="Applications\Models\ServiceAction.cs" />
     <Compile Include="Applications\Models\ServiceInstance.cs" />
     <Compile Include="Applications\Models\Application.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Applications\Results\ApplicationAcceptedResult.cs" />
     <Compile Include="Applications\Results\ApplicationProcessedResult.cs" />
     <Compile Include="Applications\Results\PaymentProcessedResult.cs" />
+    <Compile Include="Common\ActionDispatcher.cs" />
     <Compile Include="Common\DeferredInitializedStream.cs" />
     <Compile Include="Common\DistributedOperationService.cs" />
     <Compile Include="Common\DocumentService.cs" />
@@ -101,6 +103,9 @@
     </PackageReference>
     <PackageReference Include="Oracle.ManagedDataAccess">
       <Version>18.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="Rebus">
+      <Version>5.2.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

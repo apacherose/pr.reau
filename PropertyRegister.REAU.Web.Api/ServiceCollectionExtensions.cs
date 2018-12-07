@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
              return services.AddRebus(rconfig => rconfig
                     .Transport(t => t.UseOracleAsOneWayClient(System.Configuration.ConfigurationManager.ConnectionStrings["defaultRWConnectionString"].ConnectionString, "mbus_messages"))
-                    .Routing(r => r.TypeBased().Map<ApplicationAcceptedResult>("q_appl_acceptance")));
+                    .Routing(r => r.TypeBased().Map<ApplicationAcceptedResult>("q_appl_processing")));
         }
     }
 }

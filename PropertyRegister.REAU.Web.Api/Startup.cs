@@ -4,12 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyRegister.REAU.Applications;
-using PropertyRegister.REAU.Applications.Results;
-using PropertyRegister.REAU.Extensions;
 using PropertyRegister.REAU.Nomenclatures;
 using PropertyRegister.REAU.Web.Api.Test;
-using Rebus.Config;
-using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
 using Serilog;
 
@@ -34,7 +30,6 @@ namespace PropertyRegister.REAU.Web.Api
 
             // dummies ...
             services.AddTransient<INomenclaturesProvider, NomenclaturesProviderDummy>();
-            services.AddTransient<IActionDispatcher, ActionDispatcherDummy>();
 
             services.AddLogging(loggingBuilder =>
             {

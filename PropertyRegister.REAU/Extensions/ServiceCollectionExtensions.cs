@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using PropertyRegister.REAU.Applications;
+﻿using PropertyRegister.REAU.Applications;
 using PropertyRegister.REAU.Applications.Persistence;
 using PropertyRegister.REAU.Common;
 using PropertyRegister.REAU.Common.Persistence;
+using PropertyRegister.REAU.Integration;
 using PropertyRegister.REAU.Nomenclatures;
+using PropertyRegister.REAU.Payments;
 
-namespace PropertyRegister.REAU.Extensions
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
@@ -26,6 +27,14 @@ namespace PropertyRegister.REAU.Extensions
                 .AddTransient<IApplicationInfoResolver, ApplicationInfoResolver>();
         }
 
+        public static IServiceCollection AddApplicationsProcessing(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+                .AddTransient<IApplicationProcessingService, ApplicationService>()
+                .AddTransient<INomenclaturesProvider, NomenclaturesProvider>()
+                .AddTransient<IPaymentManager, PaymentManager>();
+        }
+
         public static IServiceCollection AddDocuments(this IServiceCollection serviceCollection)
         {
             return serviceCollection
@@ -36,8 +45,16 @@ namespace PropertyRegister.REAU.Extensions
         public static IServiceCollection AddREAUInfrastructureServices(this IServiceCollection serviceCollection)
         {
             return serviceCollection
+                .AddTransient<IActionDispatcher, DefaultActionDispatcher>()
                 .AddTransient<IIdempotentOperationExecutor, IdempotentOperationExecutor>()
                 .AddTransient<IServiceOperationRepository, ServiceOperationRepository>();
+        }
+
+        public static IServiceCollection AddIntegrationClients(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+                .AddTransient<IPropertyRegisterClient, PropertyRegisterClient>()
+                .AddTransient<IPaymentIntegrationClient, PaymentIntegrationClient>();
         }
     }
 }
